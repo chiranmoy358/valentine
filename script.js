@@ -3,6 +3,9 @@ const catGif = document.getElementById("catGif");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const achievement = document.getElementById("achievement");
+const isTouchDevice =
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0;
 
 let noCount = 0;
 let noScale = 1;
@@ -46,17 +49,29 @@ function init() {
 }
 
 noBtn.addEventListener("click", () => {
-    if (!chaseMode) registerNo();
+    if (!chaseMode) {
+        // Normal early clicks
+        registerNo();
+    } else if (isTouchDevice) {
+        // Mobile: tap counts as a catch
+        registerNo();
+    }
 });
 
 noBtn.addEventListener("mouseenter", () => {
-    if (chaseMode) registerNo();
+    if (chaseMode && !isTouchDevice) {
+        registerNo();
+    }
 });
 
 function registerNo() {
     shrinkNoButton();
     noCount++;
     growYes();
+
+    if (navigator.vibrate) {
+        navigator.vibrate(30);
+    }
 
     if (noCount === 1) {
         catGif.src = gifs.smug;
@@ -290,14 +305,3 @@ const statusLines = [
     "// do not perceive me",
     "// abandon hope"
 ];
-
-const statusEl = document.getElementById("statusText");
-let statusIndex = 0;
-
-function rotateStatusText() {
-    statusEl.textContent = statusLines[statusIndex];
-    statusIndex = (statusIndex + 1) % statusLines.length;
-}
-
-rotateStatusText();
-setInterval(rotateStatusText, 3500);
