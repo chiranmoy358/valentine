@@ -1,4 +1,5 @@
 const textEl = document.getElementById("text");
+const heading = document.getElementById("heading");
 const catGif = document.getElementById("catGif");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
@@ -304,6 +305,7 @@ function afterExplodeMessage() {
 
     setTimeout(() => {
         showAchievement("From the very bottom of my heart.");
+        heading.textContent = "Dear Diya"
         catGif.src = gifs.valentine;
         typeText(16);
     }, 6000);
