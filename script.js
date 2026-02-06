@@ -68,15 +68,15 @@ init();
 function init() {
     lastMessage = 0
     typeText(0);
-    
+
     setTimeout(() => {
         typeText(1);
     }, 2500);
-    
+
     setTimeout(() => {
         typeText(2);
     }, 7500);
-    
+
     catGif.src = gifs.confident1;
     showAchievement("I’ve got this. This is easy.");
 }
@@ -129,17 +129,17 @@ function registerNo() {
         shake();
         showAchievement("How could you do this to me?!");
     }
-    else if (noCount < 10) {        
+    else if (noCount < 10) {
         minMoveDistance += 50;
         moveNo();
         shake();
-        
+
         if (noCount === 7) {
             catGif.src = gifs.sad1;
             typeText(9);
             showAchievement("Hope abandoned.");
         }
-        else if (noCount === 8) {            
+        else if (noCount === 8) {
             catGif.src = gifs.sad2;
             typeText(10);
             showAchievement("I will never emotionally recover from this!!");
@@ -171,11 +171,11 @@ function registerNo() {
         showAchievement("EMOTIONAL DAMAGE!!");
         catGif.src = gifs.shock;
         typeText(13);
-        
+
         setTimeout(() => {
             typeText(14);
         }, 5000);
-        
+
         setTimeout(() => {
             burnNoButton();
         }, 5700);
@@ -285,6 +285,9 @@ function explodeNo() {
     noBtn.textContent = "💣";
 
     const shakeInterval = setInterval(shake, 800);
+    if (navigator.vibrate) {
+        navigator.vibrate([120, 60, 120, 60, 300]);
+    }
 
     setTimeout(() => {
         clearInterval(shakeInterval);
@@ -298,22 +301,22 @@ function afterExplodeMessage() {
     catGif.src = gifs.calm_down;
     typeText(15);
     showAchievement("Control Uday Control.");
-    
+
     setTimeout(() => {
         showAchievement("From the very bottom of my heart.");
         catGif.src = gifs.valentine;
         typeText(16);
     }, 6000);
-    
+
     setTimeout(() => {
         typeText(17);
     }, 12500);
 }
 
 function centerYesButton() {
-  yesBtn.style.left = "50%";
-  yesBtn.style.top = "50%";
-  yesBtn.style.transform = "translate(-50%, -50%) scale(1.1)";
+    yesBtn.style.left = "50%";
+    yesBtn.style.top = "50%";
+    yesBtn.style.transform = "translate(-50%, -50%) scale(1.1)";
 }
 
 function burnNoButton() {
@@ -321,19 +324,19 @@ function burnNoButton() {
 }
 
 function clearAchievements() {
-  achievementStack.innerHTML = "";
+    achievementStack.innerHTML = "";
 }
 
 function showAchievement(text) {
-  const el = document.createElement("div");
-  el.className = "achievement";
-  el.innerHTML = text;
+    const el = document.createElement("div");
+    el.className = "achievement";
+    el.innerHTML = text;
 
-  achievementStack.appendChild(el);
+    achievementStack.appendChild(el);
 
-  setTimeout(() => {
-    el.remove();
-  }, 5000);
+    setTimeout(() => {
+        el.remove();
+    }, 5000);
 }
 
 function typeText(index) {
