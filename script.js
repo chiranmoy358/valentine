@@ -18,6 +18,7 @@ let minMoveDistance = 140;
 let finalDare = false;
 let typeInterval = null;
 let lastMessage = null;
+let notExploded = false;
 
 const gifs = {
     confident1: "https://media.tenor.com/g7q3rx0uoIUAAAAi/mochi-mochimochi.gif",
@@ -68,7 +69,7 @@ function init() {
     lastMessage = 0
     typeText(0);
 
-    // showAchievement("“I’ve got this. This is easy”");
+    showAchievement("“I’ve got this. This is easy ”");
 
     setTimeout(() => {
         typeText(1);
@@ -94,28 +95,26 @@ function registerNo() {
     if (noCount === 1) {
         catGif.src = gifs.confident2;
         typeText(3);
-        // showAchievement("“Probably just a misclick.”");
+        showAchievement("“Probably just a misclick.”");
     }
     else if (noCount === 2) {
         catGif.src = gifs.nervous1;
         typeText(4);
-        // showAchievement("testing my patience");
     }
     else if (noCount === 3) {
         catGif.src = gifs.nervous2;
         typeText(5);
         shake();
-        // showAchievement("this was supposed to be easy");
+        showAchievement("“She's testing my patience.”");
     }
     else if (noCount === 4) {
-        // showAchievement("confidence decreasing");
         catGif.src = gifs.nervous3;
         swapButtons();
         typeText(6);
         shake();
     }
     else if (noCount === 5) {
-        // showAchievement("abandon hope");
+        showAchievement("“This was supposed to be easy.”");
         catGif.src = gifs.nervous4;
         swapButtons();
         typeText(7);
@@ -127,7 +126,6 @@ function registerNo() {
         typeText(8);
         moveNo();
         shake();
-        // showAchievement("Achievement Unlocked: Persistent");
     }
     else if (noCount < 10) {        
         minMoveDistance += 50;
@@ -135,6 +133,7 @@ function registerNo() {
         shake();
 
         if (noCount === 7) {
+            showAchievement("“Confidence decreasing.”");
             catGif.src = gifs.sad1;
             typeText(9);
         }
@@ -142,7 +141,8 @@ function registerNo() {
             catGif.src = gifs.sad2;
             typeText(10);
         }
-        else if (noCount === 9) {            
+        else if (noCount === 9) {
+            showAchievement("“Hope abandoned.”");
             catGif.src = gifs.sad3;
             typeText(11);
         }
@@ -162,8 +162,9 @@ function registerNo() {
         noBtn.style.boxShadow = "0 0 12px rgba(255,0,0,0.6)";
         shake();
     }
-    else {
-        // showAchievement("Achievement Unlocked: Emotional Damage");
+    else if (!notExploded) {
+        notExploded = true;
+        showAchievement("Emotional Damage!!");
         catGif.src = gifs.shock;
         typeText(13);
         
@@ -185,6 +186,8 @@ yesBtn.addEventListener("click", () => {
     noBtn.classList.add("hidden");
     yesBtn.classList.add("hidden");
 
+    clearAchievements();
+    showAchievement("“VICTORYYYYYY!!”");
     catGif.src = gifs.happy;
     typeText(18);
 
@@ -199,10 +202,8 @@ yesBtn.addEventListener("click", () => {
 
 noBtn.addEventListener("click", () => {
     if (!chaseMode) {
-        // Normal early clicks
         registerNo();
     } else if (isTouchDevice) {
-        // Mobile: tap counts as a catch
         registerNo();
     }
 });
@@ -227,7 +228,7 @@ function swapButtons() {
 }
 
 function shrinkNoButton() {
-    noScale = Math.max(0.6, noScale - 0.05); // floor prevents vanishing
+    noScale = Math.max(0.6, noScale - 0.05);
     applyNoTransform();
 }
 
