@@ -2,14 +2,13 @@ const textEl = document.getElementById("text");
 const catGif = document.getElementById("catGif");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
-const achievement = document.getElementById("achievement");
+const achievementStack = document.getElementById("achievementStack");
 const isTouchDevice =
     "ontouchstart" in window ||
     navigator.maxTouchPoints > 0;
 
 let noCount = 0;
 let noScale = 1;
-let chaseCount = 0;
 let noTranslateX = 0;
 let noTranslateY = 0;
 let chaseMode = false;
@@ -17,36 +16,186 @@ let buttonsSwapped = false;
 let yesScale = 1;
 let minMoveDistance = 140;
 let finalDare = false;
+let typeInterval = null;
+let lastMessage = null;
 
 const gifs = {
-    confident: "https://media.tenor.com/g7q3rx0uoIUAAAAi/mochi-mochimochi.gif",
-    smug: "https://media1.tenor.com/m/ZkMfy0jHXM0AAAAC/peach-goma.gif",
-    nervous: "https://media.giphy.com/media/l4pTfx2qLszoacZRS/giphy.gif",
-    angry: "https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
-    veryAngry: "https://media.giphy.com/media/Qr8JE9Hvi7ave/giphy.gif",
-    begging: "https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif",
-    explosion: "https://media.giphy.com/media/oe33xf3B50fsc/giphy.gif",
-    happy: "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
+    confident1: "https://media.tenor.com/g7q3rx0uoIUAAAAi/mochi-mochimochi.gif",
+    confident2: "https://media.tenor.com/HRngfAzY-fwAAAAi/peach-and.gif",
+    nervous1: "https://media.tenor.com/pkm_X_VpOJwAAAAi/mochicat-wave.gif",
+    nervous2: "https://media.tenor.com/ciBqGIR2OnAAAAAi/what-mochi.gif",
+    nervous3: "./gifs/nervous3.gif",
+    nervous4: "./gifs/nervous4.gif",
+    nervous5: "./gifs/nervous5.gif",
+    sad1: "https://media.tenor.com/CZIv1zVIx-AAAAAi/%E3%82%82%E3%81%A1%E3%81%94%E3%81%BE-%E3%82%82%E3%81%A1%E3%81%AD%E3%81%93.gif",
+    sad2: "https://media.tenor.com/Uac8Y5yud28AAAAi/peach-and-goma-goma.gif",
+    sad3: "https://media.tenor.com/PAyE85Ez53oAAAAi/mochi-mochimochi.gif",
+    angry: "https://media.tenor.com/V4C-veW9biEAAAAi/peach-goma.gif",
+    shock: "https://media.tenor.com/mn5Sab8Q2c4AAAAi/bubu-bubu-dudu.gif",
+    calm_down: "https://media.tenor.com/t95dbFmGY5EAAAAi/pengu-pudgy.gif",
+    valentine: "https://media.tenor.com/J6xumGwaxh8AAAAi/flowers-flower.gif",
+    happy: "./gifs/happy.gif"
+
 };
 
 const messages = [
-    "You’re in luck. I’ve chosen you to be my Valentine.",
-    "That’s the wrong button. It’s okay, I’ll help you.",
-    "Hey. Stop that.",
-    "You’re doing this on purpose now.",
-    "Wait—why did they switch?",
-    "I’m not letting you do this.",
-    "WHY are you still trying?",
-    "Please. Just click Yes.",
-    "I made this website."
+    "You’re in luck!",
+    "After reviewing all the applications, I’ve chosen you to be my Valentine.",
+    "Now, just click 'Yes' to make it official.",
+    "You silly! That’s the wrong button.",
+    "Hey! Stop that.",
+    "Why are you clicking 'No'?",
+    "You’re doing this on purpose, aren’t you?",
+    "You don't like me?",
+    "Nope, you’re not touching that button again.",
+    "I won't letting you do this.",
+    "PLEAAASE, JUST SAY YES!",
+    "I BEGGGG YOUUU, PLEASE!",
+    "That’s it! Go on, I dare you. Click it.",
+    "YOU CLICKED IT?! How dare you!!",
+    "That’s it! I’m blowing up this button.",
+    "Okay, sorry. I’ll calm down now. Let’s try this again.",
+    "Miss Ishani, I can’t promise perfection, but I can promise honesty, laughter, warmth, and genuine care.",
+    "So I’ll ask again, will you be my Valentine?",
+    "Wait… you said yes? Okay, now I’m smiling like an idiot.",
+    "The thing is, the buttons are just for show. It won’t actually notify me.",
+    "So I’ll come ask you out in person. I hope you’ll wait for me."
 ];
 
 init();
 
 function init() {
-    typeText(messages[0]);
-    catGif.src = gifs.confident;
+    lastMessage = 0
+    typeText(0);
+
+    // showAchievement("“I’ve got this. This is easy”");
+
+    setTimeout(() => {
+        typeText(1);
+    }, 2500);
+
+    setTimeout(() => {
+        typeText(2);
+    }, 7000);
+
+    catGif.src = gifs.confident1;
 }
+
+function registerNo() {
+    clearAchievements();
+    shrinkNoButton();
+    noCount++;
+    growYes();
+
+    if (navigator.vibrate) {
+        navigator.vibrate(30);
+    }
+
+    if (noCount === 1) {
+        catGif.src = gifs.confident2;
+        typeText(3);
+        // showAchievement("“Probably just a misclick.”");
+    }
+    else if (noCount === 2) {
+        catGif.src = gifs.nervous1;
+        typeText(4);
+        // showAchievement("testing my patience");
+    }
+    else if (noCount === 3) {
+        catGif.src = gifs.nervous2;
+        typeText(5);
+        shake();
+        // showAchievement("this was supposed to be easy");
+    }
+    else if (noCount === 4) {
+        // showAchievement("confidence decreasing");
+        catGif.src = gifs.nervous3;
+        swapButtons();
+        typeText(6);
+        shake();
+    }
+    else if (noCount === 5) {
+        // showAchievement("abandon hope");
+        catGif.src = gifs.nervous4;
+        swapButtons();
+        typeText(7);
+        shake();
+    }
+    else if (noCount === 6) {
+        catGif.src = gifs.nervous5;
+        chaseMode = true;
+        typeText(8);
+        moveNo();
+        shake();
+        // showAchievement("Achievement Unlocked: Persistent");
+    }
+    else if (noCount < 10) {        
+        minMoveDistance += 50;
+        moveNo();
+        shake();
+
+        if (noCount === 7) {
+            catGif.src = gifs.sad1;
+            typeText(9);
+        }
+        else if (noCount === 8) {            
+            catGif.src = gifs.sad2;
+            typeText(10);
+        }
+        else if (noCount === 9) {            
+            catGif.src = gifs.sad3;
+            typeText(11);
+        }
+    }
+    else if (!finalDare) {
+        catGif.src = gifs.angry;
+        typeText(12);
+
+        noBtn.classList.add("danger");
+        finalDare = true;
+        chaseMode = false;
+
+        noTranslateX = 20;
+        noTranslateY = 0;
+        applyNoTransform();
+
+        noBtn.style.boxShadow = "0 0 12px rgba(255,0,0,0.6)";
+        shake();
+    }
+    else {
+        // showAchievement("Achievement Unlocked: Emotional Damage");
+        catGif.src = gifs.shock;
+        typeText(13);
+        
+        setTimeout(() => {
+            typeText(14);
+        }, 3000);
+        
+        setTimeout(() => {
+            burnNoButton();
+        }, 5000);
+
+        setTimeout(() => {
+            explodeNo();
+        }, 7000);
+    }
+}
+
+yesBtn.addEventListener("click", () => {
+    noBtn.classList.add("hidden");
+    yesBtn.classList.add("hidden");
+
+    catGif.src = gifs.happy;
+    typeText(18);
+
+    setTimeout(() => {
+        typeText(19);
+    }, 5000);
+
+    setTimeout(() => {
+        typeText(20);
+    }, 10000);
+});
 
 noBtn.addEventListener("click", () => {
     if (!chaseMode) {
@@ -64,116 +213,6 @@ noBtn.addEventListener("mouseenter", () => {
     }
 });
 
-function registerNo() {
-    shrinkNoButton();
-    noCount++;
-    growYes();
-
-    if (navigator.vibrate) {
-        navigator.vibrate(30);
-    }
-
-    if (noCount === 1) {
-        catGif.src = gifs.smug;
-        typeText(messages[1]);
-        browserWarning("This action may cause feelings.");
-        showAchievement("Achievement unlocked: Curious");
-    }
-    else if (noCount === 2) {
-        catGif.src = gifs.nervous;
-        typeText(messages[2]);
-    }
-    else if (noCount === 3) {
-        catGif.src = gifs.angry;
-        typeText(messages[3]);
-        shake();
-    }
-    else if (noCount === 4) {
-        swapButtons();
-        typeText(messages[4]);
-        shake();
-        browserWarning("Unexpected user behavior detected.");
-    }
-    else if (noCount === 5) {
-        swapButtons();
-        catGif.src = gifs.veryAngry;
-        typeText(messages[5]);
-        shake();
-    }
-    else if (noCount === 6) {
-        chaseMode = true;
-        catGif.src = gifs.veryAngry;
-        typeText(messages[6]);
-        moveNo();
-        shake();
-        browserWarning("System recommends selecting Yes.");
-        showAchievement("Achievement Unlocked: Persistent");
-    }
-    else if (noCount < 10) {
-        chaseCount++;
-        if (chaseCount === 2) {
-            showAchievement("Achievement Unlocked: Testing My Patience");
-        }
-        minMoveDistance += 30;
-
-        if (chaseCount % 2 === 0) {
-            catGif.src = chaseCount >= 4 ? gifs.begging : gifs.veryAngry;
-            typeText(messages[Math.min(6 + Math.floor(chaseCount / 2), messages.length - 1)]);
-        }
-
-        moveNo();
-        shake();
-    }
-    else if (!finalDare) {
-        // Enter final dare mode
-        noBtn.classList.add("danger");
-        finalDare = true;
-        chaseMode = false;
-
-        // Stop movement, keep it tiny
-        noTranslateX = 0;
-        noTranslateY = 0;
-        applyNoTransform();
-
-        // Taunt
-        typeText("Go on. Click it one last time.");
-        showAchievement("💀 Final Warning Unlocked");
-
-        // Make it feel dangerous
-        noBtn.style.boxShadow = "0 0 12px rgba(255,0,0,0.6)";
-        shake();
-    }
-    else {
-        burnNoButton();
-
-        setTimeout(() => {
-            explodeNo();
-        }, 900);
-    }
-}
-
-yesBtn.addEventListener("click", () => {
-    noBtn.classList.add("hidden");
-    yesBtn.textContent = "Okay 😊";
-    yesBtn.style.left = "50%";
-    yesBtn.style.transform = "translateX(-50%) scale(1)";
-
-    catGif.src = gifs.happy;
-    typeText("...");
-
-    setTimeout(() => {
-        typeText("Hi 😊");
-    }, 700);
-
-    setTimeout(() => {
-        typeText("Happy Valentine’s Day ❤️");
-    }, 1500);
-
-    setTimeout(() => {
-        typeText("I’m really glad you’re here.");
-    }, 2600);
-});
-
 function swapButtons() {
     buttonsSwapped = !buttonsSwapped;
 
@@ -188,7 +227,7 @@ function swapButtons() {
 }
 
 function shrinkNoButton() {
-    noScale = Math.max(0.55, noScale - 0.06); // floor prevents vanishing
+    noScale = Math.max(0.6, noScale - 0.05); // floor prevents vanishing
     applyNoTransform();
 }
 
@@ -222,7 +261,7 @@ function moveNo() {
 }
 
 function growYes() {
-    yesScale += 0.05;
+    yesScale += 0.06;
     if (!buttonsSwapped) {
         yesBtn.style.transform = `translateX(-120%) scale(${yesScale})`;
     } else {
@@ -237,71 +276,80 @@ function shake() {
 
 function explodeNo() {
     noBtn.classList.remove("danger");
-    showAchievement("Achievement Unlocked: Emotional Damage");
 
-    catGif.src = gifs.explosion;
-
-    // Add emojis + dramatic text
-    typeText("💣💥 SYSTEM FAILURE 💥💣");
-
-    // Visually destroy the button (but keep it visible for now)
     noBtn.classList.add("exploding");
     noBtn.textContent = "💣";
 
-    // Extra chaos: periodic screen shake during explosion
-    const shakeInterval = setInterval(shake, 700);
+    const shakeInterval = setInterval(shake, 800);
 
-    // Keep explosion running for ~5 seconds
     setTimeout(() => {
         clearInterval(shakeInterval);
-
         noBtn.classList.add("hidden");
+        centerYesButton();
+        afterExplodeMessage()
+    }, 3500);
+}
 
-        catGif.src = gifs.begging;
-        typeText("Okay… okay… I’m sorry. Please be my Valentine.");
+function afterExplodeMessage() {
+    catGif.src = gifs.calm_down;
+    typeText(15);
 
-    }, 5000);
+    setTimeout(() => {
+        catGif.src = gifs.valentine;
+        typeText(16);
+    }, 5500);
+    
+    setTimeout(() => {
+        typeText(17);
+    }, 12000);
+}
+
+function centerYesButton() {
+  yesBtn.style.left = "50%";
+  yesBtn.style.top = "50%";
+  yesBtn.style.transform = "translate(-50%, -50%) scale(1.1)";
 }
 
 function burnNoButton() {
     noBtn.classList.add("burning");
 }
 
+function clearAchievements() {
+  achievementStack.innerHTML = "";
+}
+
 function showAchievement(text) {
-    achievement.innerHTML = text;
-    achievement.classList.add("show");
+  const el = document.createElement("div");
+  el.className = "achievement";
+  el.innerHTML = text;
 
-    achievement.animate(
-        [
-            { boxShadow: "0 0 0 rgba(255,105,180,0)" },
-            { boxShadow: "0 0 30px rgba(255,105,180,0.6)" },
-            { boxShadow: "0 12px 30px rgba(255,105,180,0.35)" }
-        ],
-        { duration: 600 }
-    );
+  achievementStack.appendChild(el);
 
-    // Stay visible longer (readable)
-    setTimeout(() => {
-        achievement.classList.remove("show");
-    }, 5200);
+  setTimeout(() => {
+    el.remove();
+  }, 5000);
 }
 
-function browserWarning(message) {
-    // alert("⚠️ " + message);
-}
+function typeText(index) {
+    if (index < lastMessage)
+        return;
+    lastMessage = index;
 
-function typeText(text) {
+    text = messages[index]
+    if (typeInterval) {
+        clearInterval(typeInterval);
+        textEl.textContent = text;
+        typeInterval = null;
+    }
+
     textEl.textContent = "";
     let i = 0;
-    const interval = setInterval(() => {
+
+    typeInterval = setInterval(() => {
         textEl.textContent += text[i++];
-        if (i === text.length) clearInterval(interval);
+        if (i >= text.length) {
+            clearInterval(typeInterval);
+            typeInterval = null;
+        }
     }, 28);
 }
-
-const statusLines = [
-    "// confidence decreasing",
-    "// this was supposed to be easy",
-    "// do not perceive me",
-    "// abandon hope"
-];
