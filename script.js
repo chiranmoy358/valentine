@@ -41,26 +41,26 @@ const gifs = {
 
 const messages = [
     "You’re in luck!",
-    "After reviewing all the applications, I’ve chosen you to be my Valentine.",
+    "After reviewing all the applications, I’ve chosen you as my Valentine. Be grateful!",
     "Now, just click 'Yes' to make it official.",
     "You silly! That’s the wrong button.",
     "Hey! Stop that.",
-    "Why are you clicking 'No'?",
     "You’re doing this on purpose, aren’t you?",
-    "You don't like me?",
+    "Yep, you need an intervention. You’re a chronic naysayer.",
+    "Dammit, Robin! Say yes for once.",
     "Nope, you’re not touching that button again.",
-    "I won't letting you do this.",
-    "PLEAAASE, JUST SAY YES!",
+    "I won’t let you do this.",
+    "Dear Robin, I’ll steal a blue French horn for you. JUST SAY YES!",
     "I BEGGGG YOUUU, PLEASE!",
     "That’s it! Go on, I dare you. Click it.",
-    "YOU CLICKED IT?! How dare you!!",
-    "That’s it! I’m blowing up this button.",
+    "YOU CLICKED IT?! How dare you!! I’m going to report this to your mother.",
+    "And I’m blowing up this button.",
     "Okay, sorry. I’ll calm down now. Let’s try this again.",
-    "Miss Ishani, I can’t promise perfection, but I can promise honesty, laughter, warmth, and genuine care.",
+    "Miss Ishani, I may not have much to offer, but I can promise you honesty, laughter, warmth, and genuine care.",
     "So I’ll ask again, will you be my Valentine?",
     "Wait… you said yes? Okay, now I’m smiling like an idiot.",
     "The thing is, the buttons are just for show. It won’t actually notify me.",
-    "So I’ll come ask you out in person. I hope you’ll wait for me."
+    "So I’ll ask you out in person. See you soon!"
 ];
 
 init();
@@ -68,18 +68,17 @@ init();
 function init() {
     lastMessage = 0
     typeText(0);
-
-    showAchievement("“I’ve got this. This is easy ”");
-
+    
     setTimeout(() => {
         typeText(1);
     }, 2500);
-
+    
     setTimeout(() => {
         typeText(2);
-    }, 7000);
-
+    }, 7500);
+    
     catGif.src = gifs.confident1;
+    showAchievement("I’ve got this. This is easy.");
 }
 
 function registerNo() {
@@ -95,30 +94,32 @@ function registerNo() {
     if (noCount === 1) {
         catGif.src = gifs.confident2;
         typeText(3);
-        showAchievement("“Probably just a misclick.”");
+        showAchievement("Probably just a misclick.");
     }
     else if (noCount === 2) {
         catGif.src = gifs.nervous1;
         typeText(4);
+        showAchievement("Is she blind?");
     }
     else if (noCount === 3) {
         catGif.src = gifs.nervous2;
         typeText(5);
         shake();
-        showAchievement("“She's testing my patience.”");
+        showAchievement("She's testing my patience.");
     }
     else if (noCount === 4) {
         catGif.src = gifs.nervous3;
         swapButtons();
         typeText(6);
+        showAchievement("This was supposed to be easy.");
         shake();
     }
     else if (noCount === 5) {
-        showAchievement("“This was supposed to be easy.”");
         catGif.src = gifs.nervous4;
         swapButtons();
         typeText(7);
         shake();
+        showAchievement("Confidence decreasing.");
     }
     else if (noCount === 6) {
         catGif.src = gifs.nervous5;
@@ -126,28 +127,31 @@ function registerNo() {
         typeText(8);
         moveNo();
         shake();
+        showAchievement("How could you do this to me?!");
     }
     else if (noCount < 10) {        
         minMoveDistance += 50;
         moveNo();
         shake();
-
+        
         if (noCount === 7) {
-            showAchievement("“Confidence decreasing.”");
             catGif.src = gifs.sad1;
             typeText(9);
+            showAchievement("Hope abandoned.");
         }
         else if (noCount === 8) {            
             catGif.src = gifs.sad2;
             typeText(10);
+            showAchievement("I will never emotionally recover from this!!");
         }
         else if (noCount === 9) {
-            showAchievement("“Hope abandoned.”");
             catGif.src = gifs.sad3;
             typeText(11);
+            showAchievement("This is a betrayal of epic proportions!!");
         }
     }
     else if (!finalDare) {
+        showAchievement("I'M GONNA KILL YOU!!");
         catGif.src = gifs.angry;
         typeText(12);
 
@@ -164,21 +168,21 @@ function registerNo() {
     }
     else if (!notExploded) {
         notExploded = true;
-        showAchievement("Emotional Damage!!");
+        showAchievement("EMOTIONAL DAMAGE!!");
         catGif.src = gifs.shock;
         typeText(13);
         
         setTimeout(() => {
             typeText(14);
-        }, 3000);
+        }, 5000);
         
         setTimeout(() => {
             burnNoButton();
-        }, 5000);
+        }, 5700);
 
         setTimeout(() => {
             explodeNo();
-        }, 7000);
+        }, 9000);
     }
 }
 
@@ -187,7 +191,7 @@ yesBtn.addEventListener("click", () => {
     yesBtn.classList.add("hidden");
 
     clearAchievements();
-    showAchievement("“VICTORYYYYYY!!”");
+    showAchievement("VICTORYYYYYY!!");
     catGif.src = gifs.happy;
     typeText(18);
 
@@ -208,7 +212,7 @@ noBtn.addEventListener("click", () => {
     }
 });
 
-noBtn.addEventListener("mouseenter", () => {
+noBtn.addEventListener("pointerenter", () => {
     if (chaseMode && !isTouchDevice) {
         registerNo();
     }
@@ -277,7 +281,6 @@ function shake() {
 
 function explodeNo() {
     noBtn.classList.remove("danger");
-
     noBtn.classList.add("exploding");
     noBtn.textContent = "💣";
 
@@ -294,15 +297,17 @@ function explodeNo() {
 function afterExplodeMessage() {
     catGif.src = gifs.calm_down;
     typeText(15);
-
+    showAchievement("Control Uday Control.");
+    
     setTimeout(() => {
+        showAchievement("From the very bottom of my heart.");
         catGif.src = gifs.valentine;
         typeText(16);
-    }, 5500);
+    }, 6000);
     
     setTimeout(() => {
         typeText(17);
-    }, 12000);
+    }, 12500);
 }
 
 function centerYesButton() {
