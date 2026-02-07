@@ -52,16 +52,14 @@ const messages = [
     "Nope, you’re not touching that button again.",
     "I won’t let you do this.",
     "Dear Robin, I’ll steal a blue French horn for you. JUST SAY YES!",
-    "I BEGGGG YOUUU, PLEASE!",
-    "That’s it! Go on, I dare you. Click it.",
-    "YOU CLICKED IT?! How dare you!! I’m going to report this to your mother.",
-    "And I’m blowing up this button.",
+    "I BEG YOUUU, PLEASE!!",
+    "That’s it! Go on, I dare you. Click 'No' again.",
+    "YOU CLICKED IT?! How dare you!! I have transcended anger!!",
+    "And I hate this button. I’m blowing it up.",
     "Okay, sorry. I’ll calm down now. Let’s try this again.",
     "Miss Ishani, I may not have much to offer, but I can promise you honesty, laughter, warmth, and genuine care.",
     "So I’ll ask again, will you be my Valentine?",
-    "Wait… you said yes? Okay, now I’m smiling like an idiot.",
-    "The thing is, the buttons are just for show. It won’t actually notify me.",
-    "So I’ll ask you out in person. See you soon!"
+    "Wait… you said yes? Okay, now I’m smiling like an idiot. See you soon!"
 ];
 
 init();
@@ -72,11 +70,11 @@ function init() {
 
     setTimeout(() => {
         typeText(1);
-    }, 2500);
+    }, 1600);
 
     setTimeout(() => {
         typeText(2);
-    }, 7500);
+    }, 5200);
 
     catGif.src = gifs.confident1;
     showAchievement("I’ve got this. This is easy.");
@@ -175,34 +173,28 @@ function registerNo() {
 
         setTimeout(() => {
             typeText(14);
-        }, 5000);
+        }, 4000);
 
         setTimeout(() => {
             burnNoButton();
-        }, 5700);
+        }, 6000);
 
         setTimeout(() => {
             explodeNo();
-        }, 9000);
+        }, 10000);
     }
 }
 
 yesBtn.addEventListener("click", () => {
+    showHeartAtYes();
     noBtn.classList.add("hidden");
     yesBtn.classList.add("hidden");
 
     clearAchievements();
+    heading.textContent = "Dear Diya"
     showAchievement("VICTORYYYYYY!!");
     catGif.src = gifs.happy;
     typeText(18);
-
-    setTimeout(() => {
-        typeText(19);
-    }, 5000);
-
-    setTimeout(() => {
-        typeText(20);
-    }, 10000);
 });
 
 noBtn.addEventListener("click", () => {
@@ -285,17 +277,13 @@ function explodeNo() {
     noBtn.classList.add("exploding");
     noBtn.textContent = "💣";
 
-    const shakeInterval = setInterval(shake, 800);
-    if (navigator.vibrate) {
-        navigator.vibrate([120, 60, 120, 60, 300]);
-    }
+    shake()
 
     setTimeout(() => {
-        clearInterval(shakeInterval);
         noBtn.classList.add("hidden");
         centerYesButton();
         afterExplodeMessage()
-    }, 3500);
+    }, 2000);
 }
 
 function afterExplodeMessage() {
@@ -308,11 +296,11 @@ function afterExplodeMessage() {
         heading.textContent = "Dear Diya"
         catGif.src = gifs.valentine;
         typeText(16);
-    }, 6000);
+    }, 5000);
 
     setTimeout(() => {
         typeText(17);
-    }, 12500);
+    }, 10000);
 }
 
 function centerYesButton() {
@@ -363,4 +351,25 @@ function typeText(index) {
             typeInterval = null;
         }
     }, 28);
+}
+
+function showHeartAtYes() {
+    const rect = yesBtn.getBoundingClientRect();
+
+    const heart = document.createElement("div");
+    heart.className = "yes-heart";
+    heart.textContent = "❤️";
+
+    heart.style.left = `${rect.left + rect.width / 2}px`;
+    heart.style.top = `${rect.top + rect.height / 2}px`;
+
+    document.body.appendChild(heart);
+
+    requestAnimationFrame(() => {
+        heart.classList.add("fade-out");
+    });
+
+    setTimeout(() => {
+        heart.remove();
+    }, 2000);
 }

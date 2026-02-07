@@ -216,3 +216,20 @@ footer {
         filter: blur(6px);
     }
 }
+
+.yes-heart {
+    position: fixed;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 60px;
+    pointer-events: none;
+    opacity: 1;
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+    z-index: 9999;
+}
+
+.yes-heart.fade-out {
+    opacity: 0;
+    transform: translate(-50%, -70%) scale(1.6);
+}
