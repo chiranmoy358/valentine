@@ -277,6 +277,9 @@ function explodeNo() {
     noBtn.classList.add("exploding");
     noBtn.textContent = "💣";
 
+    if (navigator.vibrate) {
+        navigator.vibrate(500);
+    }
     shake()
 
     setTimeout(() => {
